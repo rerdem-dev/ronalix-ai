@@ -70,6 +70,8 @@ export const tr: Translations = {
   luma_license: "Lisans",
   luma_usage: "Kullanım Örnekleri",
   luma_usage_desc: "Yaygın çıkarım motorlarını kullanarak Luma'yı yerel olarak çalıştırın.",
+  copy: "Kopyala",
+  copied: "Kopyalandı",
 
   // Benchmarks
   bench_title: "Zekayı Test Etmek",

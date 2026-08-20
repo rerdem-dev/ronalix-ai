@@ -68,6 +68,8 @@ export const en = {
   luma_license: "License",
   luma_usage: "Usage Examples",
   luma_usage_desc: "Run Luma locally using common inference engines.",
+  copy: "Copy",
+  copied: "Copied",
 
   // Benchmarks
   bench_title: "Benchmarking Intelligence",

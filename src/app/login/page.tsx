@@ -44,8 +44,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4 py-12 animate-fade-in">
-      <div className="w-full max-w-md bg-[var(--color-ronalix-gray)]/20 border border-white/10 rounded-2xl p-8 backdrop-blur-sm shadow-2xl relative overflow-hidden">
+    <div className="animate-fade-in flex min-h-[70vh] items-center justify-center px-4 py-12">
+      <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/8 bg-white/[0.03] p-8 backdrop-blur-sm">
         <div className="absolute -top-20 -right-20 w-40 h-40 bg-[var(--color-ronalix-neon)] rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
 
         <div className="text-center mb-8">

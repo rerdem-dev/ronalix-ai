@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import LanguageProvider from "@/components/LanguageProvider";
+import BackToTop from "@/components/BackToTop";
+import CursorGlow from "@/components/CursorGlow";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-sans" });
 
@@ -46,12 +48,16 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} font-sans antialiased bg-[var(--background)] text-[var(--foreground)] min-h-screen flex flex-col selection:bg-[var(--color-ronalix-neon)] selection:text-black`}>
+        <div className="page-mesh" />
+        <div className="page-grain" />
         <LanguageProvider>
+          <CursorGlow />
           <Navbar />
-          <main className="flex-grow pt-24">
+          <main className="relative z-10 flex-grow pt-24">
             {children}
           </main>
           <Footer />
+          <BackToTop />
         </LanguageProvider>
       </body>
     </html>

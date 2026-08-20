@@ -12,12 +12,14 @@ export default function Navbar() {
   const { t, lang, setLang } = useLanguage();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 12);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   const navLinks = [
     { name: t.nav_home, href: "/" },
@@ -28,78 +30,74 @@ export default function Navbar() {
 
   const toggleLang = () => setLang(lang === "en" ? "tr" : "en");
 
+  const isActiveHref = (href: string) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
         isScrolled
-          ? "bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--color-ronalix-gray)]/50 py-3"
+          ? "border-b border-white/6 bg-[var(--background)]/75 py-3 backdrop-blur-xl"
           : "bg-transparent py-5"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="font-bold text-xl tracking-wider text-white">
-              RON<span className="text-[var(--color-ronalix-neon)] group-hover:drop-shadow-[0_0_8px_rgba(0,255,102,0.8)] transition-all">ALIX</span>
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="group flex items-center">
+            <span className="text-lg font-extrabold tracking-wider text-white">
+              RON<span className="text-[var(--color-ronalix-neon)] transition-all group-hover:drop-shadow-[0_0_10px_rgba(61,255,138,0.8)]">ALIX</span>
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <div className="flex space-x-6">
-              {navLinks.map((link) => (
+          <div className="hidden items-center gap-1 md:flex">
+            {navLinks.map((link) => {
+              const isActive = isActiveHref(link.href);
+              return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-sm font-medium transition-colors hover:text-[var(--color-ronalix-neon)] ${
-                    pathname === link.href
-                      ? "text-[var(--color-ronalix-neon)]"
-                      : "text-gray-300"
+                  className={`relative rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                    isActive ? "text-white" : "text-white/45 hover:text-white"
                   }`}
                 >
-                  {link.name}
+                  {isActive && (
+                    <span className="absolute inset-0 rounded-full bg-white/[0.06]" />
+                  )}
+                  <span className="relative">{link.name}</span>
                 </Link>
-              ))}
-            </div>
-
-            <div className="flex items-center space-x-3 ml-4 pl-4 border-l border-[var(--color-ronalix-gray)]">
-              {/* Language Toggle */}
-              <button
-                onClick={toggleLang}
-                title={lang === "en" ? "Türkçeye geç" : "Switch to English"}
-                className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-[var(--color-ronalix-neon)] border border-white/10 hover:border-[var(--color-ronalix-neon)]/40 px-2.5 py-1.5 rounded-md transition-all"
-              >
-                <span className="text-base leading-none">{lang === "en" ? "🇹🇷" : "🇬🇧"}</span>
-                <span>{lang === "en" ? "TR" : "EN"}</span>
-              </button>
-
-              <Link
-                href="/login"
-                className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-              >
-                {t.nav_signin}
-              </Link>
-              <Link
-                href="/register"
-                className="text-sm font-medium bg-white text-black px-4 py-2 rounded-md hover:bg-[var(--color-ronalix-neon)] transition-colors"
-              >
-                {t.nav_signup}
-              </Link>
-            </div>
+              );
+            })}
           </div>
 
-          {/* Mobile: Lang + Hamburger */}
-          <div className="md:hidden flex items-center gap-3">
+          <div className="hidden items-center gap-2 md:flex">
             <button
               onClick={toggleLang}
-              className="text-xs font-semibold text-gray-400 hover:text-[var(--color-ronalix-neon)] border border-white/10 px-2 py-1 rounded-md transition-all"
+              title={lang === "en" ? "Türkçeye geç" : "Switch to English"}
+              className="rounded-full px-2.5 py-1.5 text-xs font-semibold text-white/45 transition-colors hover:text-white"
             >
-              {lang === "en" ? "🇹🇷 TR" : "🇬🇧 EN"}
+              {lang === "en" ? "TR" : "EN"}
+            </button>
+            <Link href="/login" className="rounded-full px-3 py-1.5 text-sm text-white/50 transition-colors hover:text-white">
+              {t.nav_signin}
+            </Link>
+            <Link
+              href="/register"
+              className="btn-shine rounded-full bg-[var(--color-ronalix-neon)] px-4 py-1.5 text-sm font-semibold text-black transition-transform hover:scale-[1.03]"
+            >
+              {t.nav_signup}
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-3 md:hidden">
+            <button
+              onClick={toggleLang}
+              className="text-xs font-semibold text-white/50"
+            >
+              {lang === "en" ? "TR" : "EN"}
             </button>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-300 hover:text-white focus:outline-none"
+              className="p-1 text-white/70 hover:text-white"
               aria-label="Toggle menu"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -114,40 +112,31 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-[var(--background)] border-b border-[var(--color-ronalix-gray)] animate-fade-in">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`block px-3 py-2 rounded-md text-base font-medium ${
-                  pathname === link.href
-                    ? "text-[var(--color-ronalix-neon)] bg-[var(--color-ronalix-gray)]/30"
-                    : "text-gray-300 hover:text-white hover:bg-[var(--color-ronalix-gray)]/50"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
-            <div className="mt-4 pt-4 border-t border-[var(--color-ronalix-gray)] flex flex-col space-y-2 px-3">
-              <Link
-                href="/login"
-                className="block text-center text-gray-300 hover:text-white py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {t.nav_signin}
-              </Link>
-              <Link
-                href="/register"
-                className="block text-center bg-white text-black py-2 rounded-md hover:bg-[var(--color-ronalix-neon)] transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {t.nav_signup}
-              </Link>
-            </div>
+        <div className="animate-slide-up mx-4 mt-3 overflow-hidden rounded-2xl border border-white/8 bg-[#0c0e12]/95 shadow-2xl backdrop-blur-xl md:hidden">
+          <div className="space-y-0.5 p-3">
+            {navLinks.map((link) => {
+              const isActive = isActiveHref(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`block rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+                    isActive ? "bg-white/[0.06] text-white" : "text-white/60 hover:bg-white/[0.04] hover:text-white"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
+          </div>
+          <div className="flex gap-2 border-t border-white/6 p-3">
+            <Link href="/login" className="flex-1 rounded-xl py-2.5 text-center text-sm text-white/60">
+              {t.nav_signin}
+            </Link>
+            <Link href="/register" className="flex-1 rounded-xl bg-[var(--color-ronalix-neon)] py-2.5 text-center text-sm font-semibold text-black">
+              {t.nav_signup}
+            </Link>
           </div>
         </div>
       )}
